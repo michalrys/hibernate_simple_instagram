@@ -24,10 +24,16 @@ public class Main {
         System.out.println(users);
         for (User user : users) {
             Set<Album> albums = user.getAlbums();
-            System.out.println("\t" + user.getName());
+            System.out.println(user.getName());
+            System.out.println("\tAlbums:");
             for (Album album : albums) {
                 System.out.println("\t\t" + album.getName());
             }
+            System.out.println("\tLiked photos:");
+            for (Photo photo : user.getPhotos()) {
+                System.out.println("\t\t" + photo.getName());
+            }
+            System.out.println("----------");
         }
 
         System.out.println("== photo ==");
@@ -40,10 +46,22 @@ public class Main {
         List<Album> albums = from_album.list();
         System.out.println(albums);
         for (Album album : albums) {
-            Set<Photo> photosInAlbum = album.getPhotos();
-            System.out.print("\t" + album.getName() + ":\n\t\t");
-            photosInAlbum.forEach(s -> System.out.print(s.getName() + ","));
-            System.out.println();
+            System.out.println("\tAlbum: ");
+            System.out.println("\t\t" + album);
+            System.out.println("\tPhotos:");
+            for (Photo photo : album.getPhotos()) {
+                System.out.println("\t\t" + photo.getName());
+                Set<User> likesByUsers = photo.getUsers();
+                if (likesByUsers.size() != 0) {
+                    System.out.println("\t\t\tlikes by:");
+                    for (User user : likesByUsers) {
+                        System.out.println("\t\t\t\t" + user.getName());
+                    }
+                } else {
+                    System.out.println("\t\t\t\tnobody likes it.");
+                }
+            }
+
         }
 
 

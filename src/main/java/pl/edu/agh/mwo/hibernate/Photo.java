@@ -1,5 +1,7 @@
 package pl.edu.agh.mwo.hibernate;
 
+import com.sun.org.glassfish.gmbal.ManagedAttribute;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -12,7 +14,13 @@ public class Photo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name =  "name")
+    @ManyToMany(
+            mappedBy = "photos",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE}
+    )
+    private Set<User> users = new HashSet<>();
+
+    @Column(name = "name")
     private String name;
 
     @Column(name = "date")
@@ -42,10 +50,23 @@ public class Photo {
         this.date = date;
     }
 
+    public void addUser(User user) {
+        users.add(user);
+    }
+
+    public void removeUser(User user) {
+        users.remove(user);
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
     @Override
     public String toString() {
         return "Photo{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", date=" + date +
                 '}';
     }

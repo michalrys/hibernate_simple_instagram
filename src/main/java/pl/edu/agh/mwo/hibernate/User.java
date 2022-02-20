@@ -17,6 +17,14 @@ public class User {
     @JoinColumn(name = "user_id")
     private Set<Album> albums = new HashSet<>();
 
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "user_photo_likes",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "photo_id")
+    )
+    private Set<Photo> photos = new HashSet<>();
+
     @Column(name = "name")
     private String name;
 
@@ -57,6 +65,18 @@ public class User {
 
     public Set<Album> getAlbums() {
         return albums;
+    }
+
+    public void addPhoto(Photo photo) {
+        photos.add(photo);
+    }
+
+    public void removePhoto(Photo photo) {
+        photos.remove(photo);
+    }
+
+    public Set<Photo> getPhotos() {
+        return photos;
     }
 
     @Override
