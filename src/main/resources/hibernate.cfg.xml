@@ -14,6 +14,7 @@
 
 		<mapping class="pl.edu.agh.mwo.hibernate.User"/>
 		<mapping class="pl.edu.agh.mwo.hibernate.Photo"/>
+		<mapping class="pl.edu.agh.mwo.hibernate.Album"/>
 
 	</session-factory>
 </hibernate-configuration>
