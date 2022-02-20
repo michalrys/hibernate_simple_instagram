@@ -1,6 +1,8 @@
 package pl.edu.agh.mwo.hibernate;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "album")
@@ -9,7 +11,9 @@ public class Album {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-//    private int userId;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "album_id")
+    private Set<Photo> photos = new HashSet<>();
 
     @Column(name = "name")
     private String name;
@@ -41,10 +45,23 @@ public class Album {
         this.description = description;
     }
 
+    public void addPhotos(Photo photo) {
+        photos.add(photo);
+    }
+
+    public Set<Photo> getPhotos() {
+        return photos;
+    }
+
+    public void removePhoto(Photo photo) {
+        photos.remove(photo);
+    }
+
     @Override
     public String toString() {
         return "Album{" +
                 "id=" + id +
+                ", photos=" + photos +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 '}';
