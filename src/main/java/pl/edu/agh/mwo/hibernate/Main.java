@@ -24,9 +24,15 @@ public class Main {
 //        main.printLikesBeforeModification();
 
         // STEP 3: point 4.2.1. Removing like -> db shall be consistent
+//        main.printLikesBeforeModification();
+//        main.deleteLikes();
+//        main.printLikesBeforeModification();
+
+        // STEP 4: point 4.2.2. Removing photo will delete likes
         main.printLikesBeforeModification();
-        main.deleteLikes();
+        main.deletePhoto();
         main.printLikesBeforeModification();
+
 
 
         main.close();
@@ -75,7 +81,6 @@ public class Main {
                     System.out.println("\t\t\t\tnobody likes it.");
                 }
             }
-
         }
     }
 
@@ -158,7 +163,6 @@ public class Main {
     }
 
     private void deleteLikes() {
-//        String queryA = "select Photo from User as u where u.name = 'Halina' and u.photo = 'Imprezka1.png'";
         String queryA = "from Photo where name = 'Imprezka1.png'";
         Query<Photo> query = session.createQuery(queryA, Photo.class);
         Photo photo = query.uniqueResult();
@@ -173,6 +177,15 @@ public class Main {
         session.update(user);
         transaction.commit();
 
+    }
+
+    private void deletePhoto() {
+        Query<Photo> query = session.createQuery("from Photo where name = 'Imprezka2.png'", Photo.class);
+        Photo photoToDelete = query.uniqueResult();
+
+        Transaction transaction = session.beginTransaction();
+        session.delete(photoToDelete);
+        transaction.commit();
     }
 
     public Main() {
