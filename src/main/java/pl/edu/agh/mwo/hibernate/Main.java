@@ -15,11 +15,18 @@ public class Main {
 
     public static void main(String[] args) {
         Main main = new Main();
-        // tu wstaw kod aplikacji
-        //main.printEntitiesForCheck();
+        // STEP 1: print db initial data - in order to have it, run database_setup.sql in SQLite
+//        main.printEntitiesForCheck();
+
+        // STEP 2: point 4.1. Adding new data to db
+//        main.printLikesBeforeModification();
+//        main.addSomeNewData();
+//        main.printLikesBeforeModification();
+
+        // STEP 3: point 4.2.1. Removing like -> db shall be consistent
         main.printLikesBeforeModification();
-        main.addSomeNewData();
-//        main.deleteLikes();
+        main.deleteLikes();
+        main.printLikesBeforeModification();
 
 
         main.close();
@@ -70,8 +77,6 @@ public class Main {
             }
 
         }
-
-
     }
 
     private void printLikesBeforeModification() {
@@ -92,7 +97,6 @@ public class Main {
                     .collect(Collectors.toList());
             System.out.printf("\t%s likes %s\n", user.getName(), photoNames);
         }
-
     }
 
     private void addSomeNewData() {
@@ -154,6 +158,20 @@ public class Main {
     }
 
     private void deleteLikes() {
+//        String queryA = "select Photo from User as u where u.name = 'Halina' and u.photo = 'Imprezka1.png'";
+        String queryA = "from Photo where name = 'Imprezka1.png'";
+        Query<Photo> query = session.createQuery(queryA, Photo.class);
+        Photo photo = query.uniqueResult();
+
+        String queryB = "from User where name = 'Halina'";
+        Query<User> query2 = session.createQuery(queryB, User.class);
+        User user = query2.uniqueResult();
+
+        user.removePhoto(photo);
+
+        Transaction transaction = session.beginTransaction();
+        session.update(user);
+        transaction.commit();
 
     }
 
