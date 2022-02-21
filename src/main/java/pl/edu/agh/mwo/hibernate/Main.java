@@ -90,19 +90,66 @@ public class Main {
             List<String> photoNames = user.getPhotos().stream()
                     .map(s -> s.getName())
                     .collect(Collectors.toList());
-            System.out.printf("\t%s likes %s\n",user.getName(), photoNames);
+            System.out.printf("\t%s likes %s\n", user.getName(), photoNames);
         }
-
 
     }
 
     private void addSomeNewData() {
         User userA = new User();
-        userA.setName("Anita 2");
+        userA.setName("Anita");
         userA.setJoinDate(LocalDateTime.of(2022, 01, 24, 12, 03, 01));
+
+        Album albumAa = new Album();
+        albumAa.setName("Anita's party");
+        albumAa.setDescription("Moje imprezowe");
+
+        Album albumAb = new Album();
+        albumAb.setName("Art");
+        albumAb.setDescription("Sztuka");
+
+        Photo photoAa = new Photo();
+        photoAa.setName("Imprezka1.png");
+        photoAa.setDate(LocalDateTime.of(2022, 02, 13, 14, 54, 24));
+        Photo photoAb = new Photo();
+        photoAb.setName("Imprezka2.png");
+        photoAb.setDate(LocalDateTime.of(2022, 02, 13, 14, 56, 24));
+        Photo photoAc = new Photo();
+        photoAc.setName("Impresja1.png");
+        photoAc.setDate(LocalDateTime.of(2022, 02, 15, 13, 01, 12));
+
+        albumAa.addPhotos(photoAa);
+        albumAa.addPhotos(photoAb);
+        albumAb.addPhotos(photoAc);
+
+        User userB = new User();
+        userB.setName("Halina");
+        userB.setJoinDate(LocalDateTime.of(2019, 02, 13, 14, 54, 24));
+
+        Album albumBa = new Album();
+        albumBa.setName("Halinas fotoski");
+        albumBa.setDescription("All in one");
+
+        Photo photoBa = new Photo();
+        photoBa.setName("MyFace.png");
+        photoBa.setDate(LocalDateTime.of(2020, 01, 24, 10, 14, 00));
+
+        albumBa.addPhotos(photoBa);
+
+        userA.addPhoto(photoBa);
+        userB.addPhoto(photoAa);
+        userB.addPhoto(photoAb);
 
         Transaction transaction = session.beginTransaction();
         session.save(userA);
+        session.save(userB);
+        session.save(photoAa);
+        session.save(photoAb);
+        session.save(photoAc);
+        session.save(photoBa);
+        session.save(albumAa);
+        session.save(albumAb);
+        session.save(albumBa);
         transaction.commit();
     }
 

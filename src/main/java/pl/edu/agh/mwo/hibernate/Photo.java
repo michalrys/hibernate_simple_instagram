@@ -4,6 +4,7 @@ import com.sun.org.glassfish.gmbal.ManagedAttribute;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,7 +25,7 @@ public class Photo {
     private String name;
 
     @Column(name = "date")
-    private LocalDateTime date;
+    private String date;
 
     public int getId() {
         return id;
@@ -42,12 +43,13 @@ public class Photo {
         this.name = name;
     }
 
-    public LocalDateTime getDate() {
+    public String getDate() {
         return date;
     }
 
     public void setDate(LocalDateTime date) {
-        this.date = date;
+        String formatted = date.format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss"));
+        this.date = formatted;
     }
 
     public void addUser(User user) {
