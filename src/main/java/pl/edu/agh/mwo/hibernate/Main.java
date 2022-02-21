@@ -1,8 +1,10 @@
 package pl.edu.agh.mwo.hibernate;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -15,8 +17,9 @@ public class Main {
         Main main = new Main();
         // tu wstaw kod aplikacji
         //main.printEntitiesForCheck();
-        main.printLikesBeforeDeletion();
-        main.deleteLikes();
+        main.printLikesBeforeModification();
+        main.addSomeNewData();
+//        main.deleteLikes();
 
 
         main.close();
@@ -71,7 +74,7 @@ public class Main {
 
     }
 
-    private void printLikesBeforeDeletion() {
+    private void printLikesBeforeModification() {
         Query<User> from_user = session.createQuery("from User", User.class);
         Query<Photo> from_photo = session.createQuery("from Photo", Photo.class);
         Query<Album> from_album = session.createQuery("from Album", Album.class);
@@ -91,6 +94,16 @@ public class Main {
         }
 
 
+    }
+
+    private void addSomeNewData() {
+        User userA = new User();
+        userA.setName("Anita 2");
+        userA.setJoinDate(LocalDateTime.of(2022, 01, 24, 12, 03, 01));
+
+        Transaction transaction = session.beginTransaction();
+        session.save(userA);
+        transaction.commit();
     }
 
     private void deleteLikes() {

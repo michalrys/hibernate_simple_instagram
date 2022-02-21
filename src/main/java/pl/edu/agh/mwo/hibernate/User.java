@@ -2,6 +2,8 @@ package pl.edu.agh.mwo.hibernate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,7 +31,7 @@ public class User {
     private String name;
 
     @Column(name = "join_date")
-    private LocalDateTime joinDate;
+    private String joinDate;
 
     public int getId() {
         return id;
@@ -47,12 +49,13 @@ public class User {
         this.name = name;
     }
 
-    public LocalDateTime getJoinDate() {
+    public String getJoinDate() {
         return joinDate;
     }
 
     public void setJoinDate(LocalDateTime joinDate) {
-        this.joinDate = joinDate;
+        String formatted = joinDate.format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss"));
+        this.joinDate = formatted;
     }
 
     public void addAlbum(Album album) {
