@@ -183,7 +183,13 @@ public class Main {
         Query<Photo> query = session.createQuery("from Photo where name = 'Imprezka2.png'", Photo.class);
         Photo photoToDelete = query.uniqueResult();
 
+        Query<Album> query2 = session.createQuery("from Album where description = 'Moje imprezowe'", Album.class);
+        Album album = query2.uniqueResult();
+        System.out.println(album);
+        album.removePhoto(photoToDelete);
+
         Transaction transaction = session.beginTransaction();
+        session.update(album);
         session.delete(photoToDelete);
         transaction.commit();
     }

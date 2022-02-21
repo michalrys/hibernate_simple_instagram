@@ -17,7 +17,8 @@ public class Photo {
 
     @ManyToMany(
             mappedBy = "photos",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE}
+            cascade = {CascadeType.ALL}
+//            cascade = {CascadeType.PERSIST, CascadeType.MERGE}
     )
     private Set<User> users = new HashSet<>();
 
