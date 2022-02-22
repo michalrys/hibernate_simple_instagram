@@ -70,6 +70,9 @@ SELECT * FROM user_photo_likes;
 
 
 --------------- OTHER REVIEWS
+SELECT * FROM user;
+SELECT * FROM photo;
+
 SELECT u.name AS "User name", p.name AS "liked photo name", p.date AS "Photo date"
 FROM user_photo_likes as upl
 JOIN user AS u ON upl.user_id = u.id
