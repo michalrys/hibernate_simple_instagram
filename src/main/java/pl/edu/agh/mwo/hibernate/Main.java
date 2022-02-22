@@ -284,7 +284,7 @@ public class Main {
         Query<Album> query = session.createQuery("from Album where name = 'Praca'", Album.class);
         Album album = query.uniqueResult();
 
-        //Here I remove albums and photos from user
+        //Here I remove albums and photos from user -> I had to remove Cascade.ALL from photo.
         Query<User> from_user = session.createQuery("from User", User.class);
         List<User> users = from_user.list();
         for (User user : users) {

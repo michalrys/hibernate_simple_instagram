@@ -15,7 +15,6 @@ public class Photo {
 
     @ManyToMany(
             mappedBy = "likedPhotos",
-//            cascade = {CascadeType.ALL}
             cascade = {CascadeType.PERSIST, CascadeType.MERGE}
     )
     private Set<User> usersWhoLikedPhoto = new HashSet<>();
