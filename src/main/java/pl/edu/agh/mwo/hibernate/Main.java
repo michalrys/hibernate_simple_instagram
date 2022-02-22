@@ -284,18 +284,23 @@ public class Main {
         Query<Album> query = session.createQuery("from Album where name = 'Praca'", Album.class);
         Album album = query.uniqueResult();
 
+        //Here I remove albums and photos from user
         Query<User> from_user = session.createQuery("from User", User.class);
         List<User> users = from_user.list();
         for (User user : users) {
             Set<Album> albums = user.getAlbums();
             albums.remove(album);
+            Set<Photo> photos = album.getPhotos();
+            for (Photo photo : photos) {
+                user.removeLikedPhoto(photo);
+            }
         }
 
         Transaction transaction = session.beginTransaction();
         for (User user : users) {
             session.update(user);
         }
-        // FIXME: this is bad because does not delete likes - it shall be cascade deletion instead of by hand
+
         session.delete(album);
         transaction.commit();
         logger.append("Transaction commited.\n");
