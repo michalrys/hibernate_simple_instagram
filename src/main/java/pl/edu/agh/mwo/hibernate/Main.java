@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import java.util.stream.Collectors;
+
 public class Main {
     Session session;
     private SimpleLogger logger = new SimpleLogger();
@@ -20,76 +21,35 @@ public class Main {
         new DataBaseReseter().rebuildDatabase();  // USE THIS TO REBUILD DATABASE
         main.logger.write("! Database was rebuilt to original state.\n");
         // STEP 1: print db initial data - in order to have it, run database_setup.sql in SQLite
-//        main.printEntitiesForCheck();
-//
+        main.previewDataBase();
+
         // STEP 2: point 4.1. Adding new data to db
         main.previewDataBase();
         main.addSomeNewData();
         main.previewDataBase();
-////
-//        // STEP 3: point 4.2.1. Removing like -> db shall be consistent
-//        main.previewDataBase();
-//        main.deleteLikes();
-//        main.previewDataBase();
-//
-//        // STEP 4: point 4.2.2. Removing photo will delete likes
-//        main.previewDataBase();
-//        main.deletePhoto();
-//        main.previewDataBase();
-//
-//        // STEP 5: point 4.2.3. Removing album will remove photos
-//        main.previewDataBase();
-//        main.deleteAlbum();
-//        main.previewDataBase();
+
+        // STEP 3: point 4.2.1. Removing like -> db shall be consistent
+        main.previewDataBase();
+        main.deleteLikes();
+        main.previewDataBase();
+
+        // STEP 4: point 4.2.2. Removing photo will delete likes
+        main.previewDataBase();
+        main.deletePhoto();
+        main.previewDataBase();
+
+        // STEP 5: point 4.2.3. Removing album will remove photos
+        main.previewDataBase();
+        main.deleteAlbum();
+        main.previewDataBase();
+
+        // STEP 6: point 4.2.4. Removing user will remove all albums, photos, likes.
+        main.previewDataBase();
+        main.deleteUser();
+        main.previewDataBase();
 
 
         main.close();
-    }
-
-    private void printEntitiesForCheck() {
-        Query<User> query = session.createQuery("from User", User.class);
-        List<User> users = query.list();
-        System.out.println(users);
-        for (User user : users) {
-            Set<Album> albums = user.getAlbums();
-            System.out.println(user.getName());
-            System.out.println("\tAlbums:");
-            for (Album album : albums) {
-                System.out.println("\t\t" + album.getName());
-            }
-            System.out.println("\tLiked photos:");
-            for (Photo photo : user.getPhotos()) {
-                System.out.println("\t\t" + photo.getName());
-            }
-            System.out.println("----------");
-        }
-
-        System.out.println("== photo ==");
-        Query<Photo> from_photo = session.createQuery("from Photo", Photo.class);
-        List<Photo> photos = from_photo.list();
-        System.out.println(photos);
-
-        System.out.println("== Albums ==");
-        Query<Album> from_album = session.createQuery("from Album", Album.class);
-        List<Album> albums = from_album.list();
-        System.out.println(albums);
-        for (Album album : albums) {
-            System.out.println("\tAlbum: ");
-            System.out.println("\t\t" + album);
-            System.out.println("\tPhotos:");
-            for (Photo photo : album.getPhotos()) {
-                System.out.println("\t\t" + photo.getName());
-                Set<User> likesByUsers = photo.getUsers();
-                if (likesByUsers.size() != 0) {
-                    System.out.println("\t\t\tlikes by:");
-                    for (User user : likesByUsers) {
-                        System.out.println("\t\t\t\t" + user.getName());
-                    }
-                } else {
-                    System.out.println("\t\t\t\tnobody likes it.");
-                }
-            }
-        }
     }
 
     private void previewDataBase() {
@@ -148,7 +108,7 @@ public class Main {
         logger.append("\nLikes:\t");
         i = 2;
         for (User user : users) {
-            List<String> photoNames = user.getPhotos().stream()
+            List<String> photoNames = user.getLikedPhotos().stream()
                     .map(s -> s.getName())
                     .collect(Collectors.toList());
             System.out.printf("\t%s likes %s\n", user.getName(), photoNames);
@@ -189,6 +149,8 @@ public class Main {
         albumAa.addPhotos(photoAa);
         albumAa.addPhotos(photoAb);
         albumAb.addPhotos(photoAc);
+        userA.addAlbum(albumAa);
+        userA.addAlbum(albumAb);
         logger.append("Create user Anita with\n");
         logger.append("\tAlbum: Anita's party (Moje imprezowe) -> Imprezka1.png, Imprezka2.png\n");
         logger.append("\tAlbum: Art (Sztuka) -> Impresja1.png\n");
@@ -210,20 +172,14 @@ public class Main {
 
         albumBa.addPhotos(photoBa);
 
-        userA.addPhoto(photoBa);
-        userB.addPhoto(photoAa);
-        userB.addPhoto(photoAb);
+        userA.addLikedPhoto(photoBa);
+        userB.addLikedPhoto(photoAa);
+        userB.addLikedPhoto(photoAb);
+        userB.addAlbum(albumBa);
 
         Transaction transaction = session.beginTransaction();
         session.save(userA);
         session.save(userB);
-        session.save(photoAa);
-        session.save(photoAb);
-        session.save(photoAc);
-        session.save(photoBa);
-        session.save(albumAa);
-        session.save(albumAb);
-        session.save(albumBa);
         transaction.commit();
         logger.append("Transaction commited.\n");
         logger.writeStoredMassages();
@@ -232,15 +188,13 @@ public class Main {
     private void deleteLikes() {
         logger.append("call: deleteLikes:\n");
         logger.append("\tHalina --> does not like 'Imprezka1.png'\n");
-        String queryA = "from Photo where name = 'Imprezka1.png'";
-        Query<Photo> query = session.createQuery(queryA, Photo.class);
-        Photo photo = query.uniqueResult();
+        Query<Photo> queryPhotoToUnlike = session.createQuery("from Photo where name = 'Imprezka1.png'", Photo.class);
+        Photo photo = queryPhotoToUnlike.uniqueResult();
 
-        String queryB = "from User where name = 'Halina'";
-        Query<User> query2 = session.createQuery(queryB, User.class);
-        User user = query2.uniqueResult();
+        Query<User> queryUserToUpdateLike = session.createQuery("from User where name = 'Halina'", User.class);
+        User user = queryUserToUpdateLike.uniqueResult();
 
-        user.removePhoto(photo);
+        user.removeLikedPhoto(photo);
 
         Transaction transaction = session.beginTransaction();
         session.update(user);
@@ -258,12 +212,12 @@ public class Main {
         Query<Album> query2 = session.createQuery("from Album where description = 'Moje imprezowe'", Album.class);
         Album album = query2.uniqueResult();
         System.out.println(album);
-        album.removePhoto(photoToDelete);
+        album.removePhoto(photoToDelete); // Album is owner of Cascade.ALL, therefore I have to remove photo by hand
 
         Query<User> query3 = session.createQuery("from User", User.class);
         List<User> users = query3.list();
         for (User user : users) {
-            user.removePhoto(photoToDelete);
+            user.removeLikedPhoto(photoToDelete); // User is owner of Cascade.ALL so I do not have to remove userWhoLiked from Photo
         }
 
         Transaction transaction = session.beginTransaction();
@@ -283,19 +237,52 @@ public class Main {
         Query<Album> query = session.createQuery("from Album where name = 'Praca'", Album.class);
         Album album = query.uniqueResult();
 
+        //Here I remove albums and photosLiked from user -> I had to remove Cascade.ALL from photo at usersWhoLikedPhoto.
         Query<User> from_user = session.createQuery("from User", User.class);
         List<User> users = from_user.list();
         for (User user : users) {
             Set<Album> albums = user.getAlbums();
-            albums.remove(album);
+            albums.remove(album); // because Album is not owner of cascade - if it would be, it would delete user
+            Set<Photo> photos = album.getPhotos();
+            for (Photo photo : photos) {
+                user.removeLikedPhoto(photo); // because photosLiked is Cascade.Persist only - otherwise it will delete user
+            }
         }
 
         Transaction transaction = session.beginTransaction();
         for (User user : users) {
             session.update(user);
         }
-        // FIXME: this is bad because does not delete likes - it shall be cascade deletion instead of by hand
-        session.delete(album);
+        session.delete(album); // Album is owner of Cascade.ALL for photos --> they will be removed automatically
+        transaction.commit();
+        logger.append("Transaction commited.\n");
+        logger.writeStoredMassages();
+    }
+
+    private void deleteUser() {
+        logger.append("call: deleteUser\n");
+        logger.append("\tdel: Janek -> albums: Wakacje2020, Wakacje2019 -> likes: Domowka2.jpg, Domowka1.jpg\n");
+
+        Query<User> queryUser = session.createQuery("from User where name = 'Janek'", User.class);
+        User userToDelete = queryUser.uniqueResult();
+        Set<Album> albumsOfUserToDelete = userToDelete.getAlbums();
+
+        Query<User> queryUsers = session.createQuery("from User", User.class);
+        List<User> users = queryUsers.list();
+
+        for (User user : users) {
+            for (Album album : albumsOfUserToDelete) {
+                for (Photo photo : album.getPhotos()) {
+                    user.removeLikedPhoto(photo); // Photo usersWhoLikedPhoto has only Cascade.Persist, so I have to do it by hand here.
+                }
+            }
+        }
+
+        Transaction transaction = session.beginTransaction();
+        for (User user : users) {
+            session.update(user);
+        }
+        session.delete(userToDelete);  // User is owner of Cascade.ALL for albums and likedPhotos - so they will be removed automatically.
         transaction.commit();
         logger.append("Transaction commited.\n");
         logger.writeStoredMassages();

@@ -2,7 +2,6 @@ package pl.edu.agh.mwo.hibernate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,13 +18,14 @@ public class User {
     @JoinColumn(name = "user_id")
     private Set<Album> albums = new HashSet<>();
 
+//    @ManyToMany(cascade = {CascadeType.ALL})
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "user_photo_likes",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "photo_id")
     )
-    private Set<Photo> photos = new HashSet<>();
+    private Set<Photo> likedPhotos = new HashSet<>();
 
     @Column(name = "name")
     private String name;
@@ -70,16 +70,16 @@ public class User {
         return albums;
     }
 
-    public void addPhoto(Photo photo) {
-        photos.add(photo);
+    public void addLikedPhoto(Photo photo) {
+        likedPhotos.add(photo);
     }
 
-    public void removePhoto(Photo photo) {
-        photos.remove(photo);
+    public void removeLikedPhoto(Photo photo) {
+        likedPhotos.remove(photo);
     }
 
-    public Set<Photo> getPhotos() {
-        return photos;
+    public Set<Photo> getLikedPhotos() {
+        return likedPhotos;
     }
 
     @Override

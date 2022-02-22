@@ -1,7 +1,5 @@
 package pl.edu.agh.mwo.hibernate;
 
-import com.sun.org.glassfish.gmbal.ManagedAttribute;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,11 +14,10 @@ public class Photo {
     private int id;
 
     @ManyToMany(
-            mappedBy = "photos",
-//            cascade = {CascadeType.ALL}
+            mappedBy = "likedPhotos",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE}
     )
-    private Set<User> users = new HashSet<>();
+    private Set<User> usersWhoLikedPhoto = new HashSet<>();
 
     @Column(name = "name")
     private String name;
@@ -53,16 +50,16 @@ public class Photo {
         this.date = formatted;
     }
 
-    public void addUser(User user) {
-        users.add(user);
+    public void addUserWhoLikedPhoto(User user) {
+        usersWhoLikedPhoto.add(user);
     }
 
-    public void removeUser(User user) {
-        users.remove(user);
+    public void removeUserWhoLikedPhoto(User user) {
+        usersWhoLikedPhoto.remove(user);
     }
 
-    public Set<User> getUsers() {
-        return users;
+    public Set<User> getUsersWhoLikedPhoto() {
+        return usersWhoLikedPhoto;
     }
 
     @Override
