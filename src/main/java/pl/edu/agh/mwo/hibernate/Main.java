@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import java.util.stream.Collectors;
+
 public class Main {
     Session session;
     private SimpleLogger logger = new SimpleLogger();
@@ -41,6 +42,11 @@ public class Main {
         // STEP 5: point 4.2.3. Removing album will remove photos
         main.previewDataBase();
         main.deleteAlbum();
+        main.previewDataBase();
+
+        // STEP 6: point 4.2.4. Removing user will remove all albums, photos, likes.
+        main.previewDataBase();
+        main.deleteUser();
         main.previewDataBase();
 
 
@@ -302,6 +308,35 @@ public class Main {
         }
 
         session.delete(album);
+        transaction.commit();
+        logger.append("Transaction commited.\n");
+        logger.writeStoredMassages();
+    }
+
+    private void deleteUser() {
+        logger.append("call: deleteUser\n");
+        logger.append("\tdel: Janek -> albums: Wakacje2020, Wakacje2019 -> likes: Domowka2.jpg, Domowka1.jpg\n");
+
+        Query<User> queryUser = session.createQuery("from User where name = 'Janek'", User.class);
+        User userToDelete = queryUser.uniqueResult();
+        Set<Album> albumsOfUserToDelete = userToDelete.getAlbums();
+
+        Query<User> queryUsers = session.createQuery("from User", User.class);
+        List<User> users = queryUsers.list();
+
+        for (User user : users) {
+            for (Album album : albumsOfUserToDelete) {
+                for (Photo photo : album.getPhotos()) {
+                    user.removeLikedPhoto(photo);
+                }
+            }
+        }
+
+        Transaction transaction = session.beginTransaction();
+        for (User user : users) {
+            session.update(user);
+        }
+        session.delete(userToDelete);
         transaction.commit();
         logger.append("Transaction commited.\n");
         logger.writeStoredMassages();
