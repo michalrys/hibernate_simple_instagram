@@ -29,11 +29,11 @@ public class Main {
         main.addSomeNewData();
         main.previewDataBase();
 
-//        // STEP 3: point 4.2.1. Removing like -> db shall be consistent
-//        main.previewDataBase();
-//        main.deleteLikes();
-//        main.previewDataBase();
-//
+        // STEP 3: point 4.2.1. Removing like -> db shall be consistent
+        main.previewDataBase();
+        main.deleteLikes();
+        main.previewDataBase();
+
 //        // STEP 4: point 4.2.2. Removing photo will delete likes
 //        main.previewDataBase();
 //        main.deletePhoto();
@@ -235,13 +235,11 @@ public class Main {
     private void deleteLikes() {
         logger.append("call: deleteLikes:\n");
         logger.append("\tHalina --> does not like 'Imprezka1.png'\n");
-        String queryA = "from Photo where name = 'Imprezka1.png'";
-        Query<Photo> query = session.createQuery(queryA, Photo.class);
-        Photo photo = query.uniqueResult();
+        Query<Photo> queryPhotoToUnlike = session.createQuery("from Photo where name = 'Imprezka1.png'", Photo.class);
+        Photo photo = queryPhotoToUnlike.uniqueResult();
 
-        String queryB = "from User where name = 'Halina'";
-        Query<User> query2 = session.createQuery(queryB, User.class);
-        User user = query2.uniqueResult();
+        Query<User> queryUserToUpdateLike = session.createQuery("from User where name = 'Halina'", User.class);
+        User user = queryUserToUpdateLike.uniqueResult();
 
         user.removeLikedPhoto(photo);
 
