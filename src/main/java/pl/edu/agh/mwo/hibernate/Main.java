@@ -22,26 +22,26 @@ public class Main {
         main.logger.write("! Database was rebuilt to original state.\n");
         // STEP 1: print db initial data - in order to have it, run database_setup.sql in SQLite
 //        main.printEntitiesForCheck();
-//
+
         // STEP 2: point 4.1. Adding new data to db
         main.previewDataBase();
         main.addSomeNewData();
         main.previewDataBase();
-////
-//        // STEP 3: point 4.2.1. Removing like -> db shall be consistent
-//        main.previewDataBase();
-//        main.deleteLikes();
-//        main.previewDataBase();
-//
-//        // STEP 4: point 4.2.2. Removing photo will delete likes
-//        main.previewDataBase();
-//        main.deletePhoto();
-//        main.previewDataBase();
-//
-//        // STEP 5: point 4.2.3. Removing album will remove photos
-//        main.previewDataBase();
-//        main.deleteAlbum();
-//        main.previewDataBase();
+
+        // STEP 3: point 4.2.1. Removing like -> db shall be consistent
+        main.previewDataBase();
+        main.deleteLikes();
+        main.previewDataBase();
+
+        // STEP 4: point 4.2.2. Removing photo will delete likes
+        main.previewDataBase();
+        main.deletePhoto();
+        main.previewDataBase();
+
+        // STEP 5: point 4.2.3. Removing album will remove photos
+        main.previewDataBase();
+        main.deleteAlbum();
+        main.previewDataBase();
 
 
         main.close();
@@ -59,7 +59,7 @@ public class Main {
                 System.out.println("\t\t" + album.getName());
             }
             System.out.println("\tLiked photos:");
-            for (Photo photo : user.getPhotos()) {
+            for (Photo photo : user.getLikedPhotos()) {
                 System.out.println("\t\t" + photo.getName());
             }
             System.out.println("----------");
@@ -80,7 +80,7 @@ public class Main {
             System.out.println("\tPhotos:");
             for (Photo photo : album.getPhotos()) {
                 System.out.println("\t\t" + photo.getName());
-                Set<User> likesByUsers = photo.getUsers();
+                Set<User> likesByUsers = photo.getUsersWhoLikedPhoto();
                 if (likesByUsers.size() != 0) {
                     System.out.println("\t\t\tlikes by:");
                     for (User user : likesByUsers) {
@@ -149,7 +149,7 @@ public class Main {
         logger.append("\nLikes:\t");
         i = 2;
         for (User user : users) {
-            List<String> photoNames = user.getPhotos().stream()
+            List<String> photoNames = user.getLikedPhotos().stream()
                     .map(s -> s.getName())
                     .collect(Collectors.toList());
             System.out.printf("\t%s likes %s\n", user.getName(), photoNames);
@@ -211,9 +211,9 @@ public class Main {
 
         albumBa.addPhotos(photoBa);
 
-        userA.addPhoto(photoBa);
-        userB.addPhoto(photoAa);
-        userB.addPhoto(photoAb);
+        userA.addLikedPhoto(photoBa);
+        userB.addLikedPhoto(photoAa);
+        userB.addLikedPhoto(photoAb);
 
         Transaction transaction = session.beginTransaction();
         session.save(userA);
@@ -241,7 +241,7 @@ public class Main {
         Query<User> query2 = session.createQuery(queryB, User.class);
         User user = query2.uniqueResult();
 
-        user.removePhoto(photo);
+        user.removeLikedPhoto(photo);
 
         Transaction transaction = session.beginTransaction();
         session.update(user);
@@ -264,7 +264,7 @@ public class Main {
         Query<User> query3 = session.createQuery("from User", User.class);
         List<User> users = query3.list();
         for (User user : users) {
-            user.removePhoto(photoToDelete);
+            user.removeLikedPhoto(photoToDelete);
         }
 
         Transaction transaction = session.beginTransaction();
