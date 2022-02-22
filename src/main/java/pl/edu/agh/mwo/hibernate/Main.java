@@ -14,6 +14,7 @@ public class Main {
     private SimpleLogger logger = new SimpleLogger();
 
     public static void main(String[] args) {
+        //TODO: later merge to branch FEATURE-POINT-3-...
         Main main = new Main();
         main.logger.clearFile();
 
