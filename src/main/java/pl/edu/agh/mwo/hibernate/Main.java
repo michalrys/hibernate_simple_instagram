@@ -29,10 +29,14 @@ public class Main {
 //        main.printLikesBeforeModification();
 
         // STEP 4: point 4.2.2. Removing photo will delete likes
-        main.printLikesBeforeModification();
-        main.deletePhoto();
-        main.printLikesBeforeModification();
+//        main.printLikesBeforeModification();
+//        main.deletePhoto();
+//        main.printLikesBeforeModification();
 
+        // STEP 5: point 4.2.3. Removing album will remove photos
+        main.printLikesBeforeModification();
+        main.deleteAlbum();
+        main.printLikesBeforeModification();
 
 
         main.close();
@@ -93,9 +97,28 @@ public class Main {
         List<Photo> photos = from_photo.list();
         List<Album> albums = from_album.list();
 
-        System.out.println(users);
-        System.out.println(photos);
-        System.out.println(albums);
+//        System.out.println(users);
+        System.out.print("Users:\t");
+        for (User user: users) {
+            List<String> albumsNames = user.getAlbums().stream().map(s -> s.getName()).collect(Collectors.toList());
+            System.out.printf("%s(%s), ", user.getName(), albumsNames);
+        }
+        System.out.println();
+
+//        System.out.println(photos);
+        System.out.print("Photos:\t");
+        for (Photo photo : photos) {
+            System.out.printf("%s, ", photo.getName());
+        }
+        System.out.println();
+
+//        System.out.println(albums);
+        System.out.print("Albums:\t");
+        for (Album album : albums) {
+            System.out.printf("%s, ", album.getName());
+        }
+        System.out.println();
+
         for (User user : users) {
             List<String> photoNames = user.getPhotos().stream()
                     .map(s -> s.getName())
@@ -188,10 +211,40 @@ public class Main {
         System.out.println(album);
         album.removePhoto(photoToDelete);
 
+        Query<User> query3 = session.createQuery("from User", User.class);
+        List<User> users = query3.list();
+        for (User user : users) {
+            user.removePhoto(photoToDelete);
+        }
+
         Transaction transaction = session.beginTransaction();
         session.update(album);
         session.delete(photoToDelete);
+        for (User user : users) {
+            session.update(user);
+        }
         transaction.commit();
+    }
+
+    private void deleteAlbum() {
+        Query<Album> query = session.createQuery("from Album where name = 'Praca'", Album.class);
+        Album album = query.uniqueResult();
+
+        Query<User> from_user = session.createQuery("from User", User.class);
+        List<User> users = from_user.list();
+        for (User user : users) {
+            Set<Album> albums = user.getAlbums();
+            albums.remove(album);
+        }
+
+        Transaction transaction = session.beginTransaction();
+        for (User user : users) {
+            session.update(user);
+        }
+        // FIXME: this is bad because does not delete likes - it shall be cascade deletion instead of by hand
+        session.delete(album);
+        transaction.commit();
+
     }
 
     public Main() {
