@@ -44,10 +44,10 @@ public class Main {
         main.deleteAlbum();
         main.previewDataBase();
 
-//        // STEP 6: point 4.2.4. Removing user will remove all albums, photos, likes.
-//        main.previewDataBase();
-//        main.deleteUser();
-//        main.previewDataBase();
+        // STEP 6: point 4.2.4. Removing user will remove all albums, photos, likes.
+        main.previewDataBase();
+        main.deleteUser();
+        main.previewDataBase();
 
 
         main.close();
@@ -320,7 +320,7 @@ public class Main {
         for (User user : users) {
             for (Album album : albumsOfUserToDelete) {
                 for (Photo photo : album.getPhotos()) {
-                    user.removeLikedPhoto(photo);
+                    user.removeLikedPhoto(photo); // Photo usersWhoLikedPhoto has only Cascade.Persist, so I have to do it by hand here.
                 }
             }
         }
@@ -329,7 +329,7 @@ public class Main {
         for (User user : users) {
             session.update(user);
         }
-        session.delete(userToDelete);
+        session.delete(userToDelete);  // User is owner of Cascade.ALL for albums and likedPhotos - so they will be removed automatically.
         transaction.commit();
         logger.append("Transaction commited.\n");
         logger.writeStoredMassages();
