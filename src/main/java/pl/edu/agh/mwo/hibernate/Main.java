@@ -7,8 +7,8 @@ import org.hibernate.query.Query;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
+import java.util.stream.Collectors;
 public class Main {
     Session session;
     private SimpleLogger logger = new SimpleLogger();
@@ -16,28 +16,31 @@ public class Main {
     public static void main(String[] args) {
         Main main = new Main();
         main.logger.clearFile();
-        // STEP 1: print db initial data - in order to have it, run database_setup.sql in SQLite
-        main.printEntitiesForCheck();
 
+        new DataBaseReseter().rebuildDatabase();  // USE THIS TO REBUILD DATABASE
+        main.logger.write("! Database was rebuilt to original state.\n");
+        // STEP 1: print db initial data - in order to have it, run database_setup.sql in SQLite
+//        main.printEntitiesForCheck();
+//
         // STEP 2: point 4.1. Adding new data to db
         main.previewDataBase();
         main.addSomeNewData();
         main.previewDataBase();
-
-        // STEP 3: point 4.2.1. Removing like -> db shall be consistent
-        main.previewDataBase();
-        main.deleteLikes();
-        main.previewDataBase();
-
-        // STEP 4: point 4.2.2. Removing photo will delete likes
-        main.previewDataBase();
-        main.deletePhoto();
-        main.previewDataBase();
-
-        // STEP 5: point 4.2.3. Removing album will remove photos
-        main.previewDataBase();
-        main.deleteAlbum();
-        main.previewDataBase();
+////
+//        // STEP 3: point 4.2.1. Removing like -> db shall be consistent
+//        main.previewDataBase();
+//        main.deleteLikes();
+//        main.previewDataBase();
+//
+//        // STEP 4: point 4.2.2. Removing photo will delete likes
+//        main.previewDataBase();
+//        main.deletePhoto();
+//        main.previewDataBase();
+//
+//        // STEP 5: point 4.2.3. Removing album will remove photos
+//        main.previewDataBase();
+//        main.deleteAlbum();
+//        main.previewDataBase();
 
 
         main.close();
