@@ -29,25 +29,25 @@ public class Main {
         main.addSomeNewData();
         main.previewDataBase();
 
-        // STEP 3: point 4.2.1. Removing like -> db shall be consistent
-        main.previewDataBase();
-        main.deleteLikes();
-        main.previewDataBase();
-
-        // STEP 4: point 4.2.2. Removing photo will delete likes
-        main.previewDataBase();
-        main.deletePhoto();
-        main.previewDataBase();
-
-        // STEP 5: point 4.2.3. Removing album will remove photos
-        main.previewDataBase();
-        main.deleteAlbum();
-        main.previewDataBase();
-
-        // STEP 6: point 4.2.4. Removing user will remove all albums, photos, likes.
-        main.previewDataBase();
-        main.deleteUser();
-        main.previewDataBase();
+//        // STEP 3: point 4.2.1. Removing like -> db shall be consistent
+//        main.previewDataBase();
+//        main.deleteLikes();
+//        main.previewDataBase();
+//
+//        // STEP 4: point 4.2.2. Removing photo will delete likes
+//        main.previewDataBase();
+//        main.deletePhoto();
+//        main.previewDataBase();
+//
+//        // STEP 5: point 4.2.3. Removing album will remove photos
+//        main.previewDataBase();
+//        main.deleteAlbum();
+//        main.previewDataBase();
+//
+//        // STEP 6: point 4.2.4. Removing user will remove all albums, photos, likes.
+//        main.previewDataBase();
+//        main.deleteUser();
+//        main.previewDataBase();
 
 
         main.close();
@@ -196,6 +196,8 @@ public class Main {
         albumAa.addPhotos(photoAa);
         albumAa.addPhotos(photoAb);
         albumAb.addPhotos(photoAc);
+        userA.addAlbum(albumAa);
+        userA.addAlbum(albumAb);
         logger.append("Create user Anita with\n");
         logger.append("\tAlbum: Anita's party (Moje imprezowe) -> Imprezka1.png, Imprezka2.png\n");
         logger.append("\tAlbum: Art (Sztuka) -> Impresja1.png\n");
@@ -220,17 +222,11 @@ public class Main {
         userA.addLikedPhoto(photoBa);
         userB.addLikedPhoto(photoAa);
         userB.addLikedPhoto(photoAb);
+        userB.addAlbum(albumBa);
 
         Transaction transaction = session.beginTransaction();
         session.save(userA);
         session.save(userB);
-        session.save(photoAa);
-        session.save(photoAb);
-        session.save(photoAc);
-        session.save(photoBa);
-        session.save(albumAa);
-        session.save(albumAb);
-        session.save(albumBa);
         transaction.commit();
         logger.append("Transaction commited.\n");
         logger.writeStoredMassages();
