@@ -34,16 +34,16 @@ public class Main {
         main.deleteLikes();
         main.previewDataBase();
 
-//        // STEP 4: point 4.2.2. Removing photo will delete likes
-//        main.previewDataBase();
-//        main.deletePhoto();
-//        main.previewDataBase();
-//
+        // STEP 4: point 4.2.2. Removing photo will delete likes
+        main.previewDataBase();
+        main.deletePhoto();
+        main.previewDataBase();
+
 //        // STEP 5: point 4.2.3. Removing album will remove photos
 //        main.previewDataBase();
 //        main.deleteAlbum();
 //        main.previewDataBase();
-//
+
 //        // STEP 6: point 4.2.4. Removing user will remove all albums, photos, likes.
 //        main.previewDataBase();
 //        main.deleteUser();
@@ -259,12 +259,12 @@ public class Main {
         Query<Album> query2 = session.createQuery("from Album where description = 'Moje imprezowe'", Album.class);
         Album album = query2.uniqueResult();
         System.out.println(album);
-        album.removePhoto(photoToDelete);
+        album.removePhoto(photoToDelete); // Album is owner of Cascade.ALL, therefore I have to remove photo by hand
 
         Query<User> query3 = session.createQuery("from User", User.class);
         List<User> users = query3.list();
         for (User user : users) {
-            user.removeLikedPhoto(photoToDelete);
+            user.removeLikedPhoto(photoToDelete); // User is owner of Cascade.ALL so I do not have to remove userWhoLiked from Photo
         }
 
         Transaction transaction = session.beginTransaction();
