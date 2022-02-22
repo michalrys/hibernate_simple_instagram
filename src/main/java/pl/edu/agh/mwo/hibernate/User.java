@@ -18,7 +18,8 @@ public class User {
     @JoinColumn(name = "user_id")
     private Set<Album> albums = new HashSet<>();
 
-    @ManyToMany(cascade = {CascadeType.ALL})
+//    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "user_photo_likes",
             joinColumns = @JoinColumn(name = "user_id"),
