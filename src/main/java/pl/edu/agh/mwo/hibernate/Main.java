@@ -10,33 +10,34 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Main {
-
     Session session;
+    private SimpleLogger logger = new SimpleLogger();
 
     public static void main(String[] args) {
         Main main = new Main();
+        main.logger.clearFile();
         // STEP 1: print db initial data - in order to have it, run database_setup.sql in SQLite
-//        main.printEntitiesForCheck();
+        main.printEntitiesForCheck();
 
         // STEP 2: point 4.1. Adding new data to db
-//        main.printLikesBeforeModification();
-//        main.addSomeNewData();
-//        main.printLikesBeforeModification();
+        main.previewDataBase();
+        main.addSomeNewData();
+        main.previewDataBase();
 
         // STEP 3: point 4.2.1. Removing like -> db shall be consistent
-//        main.printLikesBeforeModification();
-//        main.deleteLikes();
-//        main.printLikesBeforeModification();
+        main.previewDataBase();
+        main.deleteLikes();
+        main.previewDataBase();
 
         // STEP 4: point 4.2.2. Removing photo will delete likes
-//        main.printLikesBeforeModification();
-//        main.deletePhoto();
-//        main.printLikesBeforeModification();
+        main.previewDataBase();
+        main.deletePhoto();
+        main.previewDataBase();
 
         // STEP 5: point 4.2.3. Removing album will remove photos
-        main.printLikesBeforeModification();
+        main.previewDataBase();
         main.deleteAlbum();
-        main.printLikesBeforeModification();
+        main.previewDataBase();
 
 
         main.close();
@@ -88,7 +89,8 @@ public class Main {
         }
     }
 
-    private void printLikesBeforeModification() {
+    private void previewDataBase() {
+        logger.append("call: previewDataBase\n");
         Query<User> from_user = session.createQuery("from User", User.class);
         Query<Photo> from_photo = session.createQuery("from Photo", Photo.class);
         Query<Album> from_album = session.createQuery("from Album", Album.class);
@@ -99,35 +101,66 @@ public class Main {
 
 //        System.out.println(users);
         System.out.print("Users:\t");
-        for (User user: users) {
+        logger.append("Users:\t");
+        int i = 3;
+        for (User user : users) {
             List<String> albumsNames = user.getAlbums().stream().map(s -> s.getName()).collect(Collectors.toList());
             System.out.printf("%s(%s), ", user.getName(), albumsNames);
+            if (i++ % 3 == 0) {
+                logger.append(String.format("\n\t\t%s(%s)", user.getName(), albumsNames));
+            } else {
+                logger.append(String.format(", %s(%s)", user.getName(), albumsNames));
+            }
         }
         System.out.println();
 
 //        System.out.println(photos);
         System.out.print("Photos:\t");
+        logger.append("\nPhotos:\t");
+        i = 3;
         for (Photo photo : photos) {
             System.out.printf("%s, ", photo.getName());
+            if (i++ % 3 == 0) {
+                logger.append(String.format("\n\t\t%s", photo.getName()));
+            } else {
+                logger.append(String.format(", %s", photo.getName()));
+            }
         }
         System.out.println();
 
 //        System.out.println(albums);
         System.out.print("Albums:\t");
+        logger.append("\nAlbums:\t");
+        i = 3;
         for (Album album : albums) {
             System.out.printf("%s, ", album.getName());
+            if (i++ % 3 == 0) {
+                logger.append(String.format("\n\t\t%s", album.getName()));
+            } else {
+                logger.append(String.format(", %s", album.getName()));
+            }
         }
         System.out.println();
-
+        System.out.println("Likes:\t ");
+        logger.append("\nLikes:\t");
+        i = 2;
         for (User user : users) {
             List<String> photoNames = user.getPhotos().stream()
                     .map(s -> s.getName())
                     .collect(Collectors.toList());
             System.out.printf("\t%s likes %s\n", user.getName(), photoNames);
+            if (i++ % 2 == 0) {
+                logger.append(String.format("\n\t\t%s likes %s", user.getName(), photoNames));
+            } else {
+                logger.append(String.format(", %s likes %s", user.getName(), photoNames));
+            }
         }
+        logger.append("\n");
+        logger.writeStoredMassages();
     }
 
     private void addSomeNewData() {
+        logger.append("call: addSomeNewData\n");
         User userA = new User();
         userA.setName("Anita");
         userA.setJoinDate(LocalDateTime.of(2022, 01, 24, 12, 03, 01));
@@ -153,6 +186,9 @@ public class Main {
         albumAa.addPhotos(photoAa);
         albumAa.addPhotos(photoAb);
         albumAb.addPhotos(photoAc);
+        logger.append("Create user Anita with\n");
+        logger.append("\tAlbum: Anita's party (Moje imprezowe) -> Imprezka1.png, Imprezka2.png\n");
+        logger.append("\tAlbum: Art (Sztuka) -> Impresja1.png\n");
 
         User userB = new User();
         userB.setName("Halina");
@@ -165,6 +201,9 @@ public class Main {
         Photo photoBa = new Photo();
         photoBa.setName("MyFace.png");
         photoBa.setDate(LocalDateTime.of(2020, 01, 24, 10, 14, 00));
+
+        logger.append("Create user Halina with\n");
+        logger.append("\tAlbum: Halinas fotoski (All in one) -> MyFace.png\n");
 
         albumBa.addPhotos(photoBa);
 
@@ -183,9 +222,13 @@ public class Main {
         session.save(albumAb);
         session.save(albumBa);
         transaction.commit();
+        logger.append("Transaction commited.\n");
+        logger.writeStoredMassages();
     }
 
     private void deleteLikes() {
+        logger.append("call: deleteLikes:\n");
+        logger.append("\tHalina --> does not like 'Imprezka1.png'\n");
         String queryA = "from Photo where name = 'Imprezka1.png'";
         Query<Photo> query = session.createQuery(queryA, Photo.class);
         Photo photo = query.uniqueResult();
@@ -199,10 +242,13 @@ public class Main {
         Transaction transaction = session.beginTransaction();
         session.update(user);
         transaction.commit();
-
+        logger.append("Transcation commited.\n");
+        logger.writeStoredMassages();
     }
 
     private void deletePhoto() {
+        logger.append("call: deletePhoto\n");
+        logger.append("\tdel: 'Imprezka2.png'  from album: Anita's party (Moje imprezowe)  user: Anita\n");
         Query<Photo> query = session.createQuery("from Photo where name = 'Imprezka2.png'", Photo.class);
         Photo photoToDelete = query.uniqueResult();
 
@@ -224,9 +270,13 @@ public class Main {
             session.update(user);
         }
         transaction.commit();
+        logger.append("Transaction commited.\n");
+        logger.writeStoredMassages();
     }
 
     private void deleteAlbum() {
+        logger.append("call: deleteAlbum\n");
+        logger.append("\tdel: 'Praca' from user: Romek\n");
         Query<Album> query = session.createQuery("from Album where name = 'Praca'", Album.class);
         Album album = query.uniqueResult();
 
@@ -244,7 +294,8 @@ public class Main {
         // FIXME: this is bad because does not delete likes - it shall be cascade deletion instead of by hand
         session.delete(album);
         transaction.commit();
-
+        logger.append("Transaction commited.\n");
+        logger.writeStoredMassages();
     }
 
     public Main() {
