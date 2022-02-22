@@ -39,10 +39,10 @@ public class Main {
         main.deletePhoto();
         main.previewDataBase();
 
-//        // STEP 5: point 4.2.3. Removing album will remove photos
-//        main.previewDataBase();
-//        main.deleteAlbum();
-//        main.previewDataBase();
+        // STEP 5: point 4.2.3. Removing album will remove photos
+        main.previewDataBase();
+        main.deleteAlbum();
+        main.previewDataBase();
 
 //        // STEP 6: point 4.2.4. Removing user will remove all albums, photos, likes.
 //        main.previewDataBase();
@@ -284,15 +284,15 @@ public class Main {
         Query<Album> query = session.createQuery("from Album where name = 'Praca'", Album.class);
         Album album = query.uniqueResult();
 
-        //Here I remove albums and photos from user -> I had to remove Cascade.ALL from photo.
+        //Here I remove albums and photosLiked from user -> I had to remove Cascade.ALL from photo at usersWhoLikedPhoto.
         Query<User> from_user = session.createQuery("from User", User.class);
         List<User> users = from_user.list();
         for (User user : users) {
             Set<Album> albums = user.getAlbums();
-            albums.remove(album);
+            albums.remove(album); // because Album is not owner of cascade - if it would be, it would delete user
             Set<Photo> photos = album.getPhotos();
             for (Photo photo : photos) {
-                user.removeLikedPhoto(photo);
+                user.removeLikedPhoto(photo); // because photosLiked is Cascade.Persist only - otherwise it will delete user
             }
         }
 
@@ -300,8 +300,7 @@ public class Main {
         for (User user : users) {
             session.update(user);
         }
-
-        session.delete(album);
+        session.delete(album); // Album is owner of Cascade.ALL for photos --> they will be removed automatically
         transaction.commit();
         logger.append("Transaction commited.\n");
         logger.writeStoredMassages();
