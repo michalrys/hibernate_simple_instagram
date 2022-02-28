@@ -92,10 +92,18 @@ public class User {
 
     public void addFriend(User user) {
         friends.add(user);
+        Set<User> friendsOfUser = user.getFriends();
+        if (!friendsOfUser.contains(this)) {
+            user.addFriend(this);
+        }
     }
 
     public void removeFriend(User user) {
         friends.remove(user);
+        Set<User> friendsOfUser = user.getFriends();
+        if (!friendsOfUser.contains(this)) {
+            user.removeFriend(this);
+        }
     }
 
     public Set<User> getFriends() {

@@ -187,6 +187,7 @@ public class Main {
 
         albumBa.addPhotos(photoBa);
 
+        userA.addFriend(userB);
         userA.addLikedPhoto(photoBa);
         userB.addLikedPhoto(photoAa);
         userB.addLikedPhoto(photoAb);
