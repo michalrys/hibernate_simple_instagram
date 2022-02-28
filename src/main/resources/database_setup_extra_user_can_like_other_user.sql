@@ -78,6 +78,9 @@ SELECT * FROM user_photo_likes;
 INSERT INTO user_friend_of_user (user_id, user_friend_id) VALUES (1, 2);
 INSERT INTO user_friend_of_user (user_id, user_friend_id) VALUES (1, 3);
 INSERT INTO user_friend_of_user (user_id, user_friend_id) VALUES (1, 4);
+INSERT INTO user_friend_of_user (user_id, user_friend_id) VALUES (2, 1);
+INSERT INTO user_friend_of_user (user_id, user_friend_id) VALUES (3, 1);
+INSERT INTO user_friend_of_user (user_id, user_friend_id) VALUES (4, 1);
 SELECT * FROM user_friend_of_user;
 
 --------------- OTHER REVIEWS

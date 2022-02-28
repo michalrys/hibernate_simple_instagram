@@ -63,6 +63,9 @@ public class DataBaseReseter {
         statement.addBatch("INSERT INTO user_friend_of_user (user_id, user_friend_id) VALUES (1, 2);");
         statement.addBatch("INSERT INTO user_friend_of_user (user_id, user_friend_id) VALUES (1, 3);");
         statement.addBatch("INSERT INTO user_friend_of_user (user_id, user_friend_id) VALUES (1, 4);");
+        statement.addBatch("INSERT INTO user_friend_of_user (user_id, user_friend_id) VALUES (2, 1);");
+        statement.addBatch("INSERT INTO user_friend_of_user (user_id, user_friend_id) VALUES (3, 1);");
+        statement.addBatch("INSERT INTO user_friend_of_user (user_id, user_friend_id) VALUES (4, 1);");
 
         statement.executeBatch();
         statement.close();
