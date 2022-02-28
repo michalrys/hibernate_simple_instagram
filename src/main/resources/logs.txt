@@ -1,6 +1,6 @@
-[2022-02-22_23-59-30]: ! Database was rebuilt to original state.
+[2022-02-28_23-31-44]: ! Database was rebuilt to original state.
 --------------------------------------
-[2022-02-22_23-59-30]: call: previewDataBase
+[2022-02-28_23-31-44]: call: previewDataBase
 Users:	
 		Janek([Wakacje2020, Wakacje2019]), Tomek([Urodziny]), Romek([Dom, Praca])
 		Atomek([])
@@ -16,7 +16,7 @@ Likes:
 		Janek likes [Domowka2.jpg, PracaFimowka2.jpg, Domowka1.jpg], Tomek likes [Domek1.jpg, Domek2.jpg]
 		Romek likes [], Atomek likes [Plaza2.jpg, Plaza1.jpg]
 --------------------------------------
-[2022-02-22_23-59-30]: call: previewDataBase
+[2022-02-28_23-31-44]: call: previewDataBase
 Users:	
 		Janek([Wakacje2020, Wakacje2019]), Tomek([Urodziny]), Romek([Dom, Praca])
 		Atomek([])
@@ -32,7 +32,7 @@ Likes:
 		Janek likes [Domowka2.jpg, PracaFimowka2.jpg, Domowka1.jpg], Tomek likes [Domek1.jpg, Domek2.jpg]
 		Romek likes [], Atomek likes [Plaza2.jpg, Plaza1.jpg]
 --------------------------------------
-[2022-02-22_23-59-30]: call: addSomeNewData
+[2022-02-28_23-31-44]: call: addSomeNewData
 Create user Anita with
 	Album: Anita's party (Moje imprezowe) -> Imprezka1.png, Imprezka2.png
 	Album: Art (Sztuka) -> Impresja1.png
@@ -40,7 +40,7 @@ Create user Halina with
 	Album: Halinas fotoski (All in one) -> MyFace.png
 Transaction commited.
 --------------------------------------
-[2022-02-22_23-59-31]: call: previewDataBase
+[2022-02-28_23-31-44]: call: previewDataBase
 Users:	
 		Janek([Wakacje2020, Wakacje2019]), Tomek([Urodziny]), Romek([Dom, Praca])
 		Atomek([]), Anita([Anita's party, Art]), Halina([Halinas fotoski])
@@ -60,7 +60,7 @@ Likes:
 		Romek likes [], Atomek likes [Plaza2.jpg, Plaza1.jpg]
 		Anita likes [MyFace.png], Halina likes [Imprezka2.png, Imprezka1.png]
 --------------------------------------
-[2022-02-22_23-59-31]: call: previewDataBase
+[2022-02-28_23-31-44]: call: previewDataBase
 Users:	
 		Janek([Wakacje2020, Wakacje2019]), Tomek([Urodziny]), Romek([Dom, Praca])
 		Atomek([]), Anita([Anita's party, Art]), Halina([Halinas fotoski])
@@ -80,11 +80,11 @@ Likes:
 		Romek likes [], Atomek likes [Plaza2.jpg, Plaza1.jpg]
 		Anita likes [MyFace.png], Halina likes [Imprezka2.png, Imprezka1.png]
 --------------------------------------
-[2022-02-22_23-59-31]: call: deleteLikes:
+[2022-02-28_23-31-44]: call: deleteLikes:
 	Halina --> does not like 'Imprezka1.png'
 Transcation commited.
 --------------------------------------
-[2022-02-22_23-59-31]: call: previewDataBase
+[2022-02-28_23-31-44]: call: previewDataBase
 Users:	
 		Janek([Wakacje2020, Wakacje2019]), Tomek([Urodziny]), Romek([Dom, Praca])
 		Atomek([]), Anita([Anita's party, Art]), Halina([Halinas fotoski])
@@ -104,7 +104,7 @@ Likes:
 		Romek likes [], Atomek likes [Plaza2.jpg, Plaza1.jpg]
 		Anita likes [MyFace.png], Halina likes [Imprezka2.png]
 --------------------------------------
-[2022-02-22_23-59-31]: call: previewDataBase
+[2022-02-28_23-31-44]: call: previewDataBase
 Users:	
 		Janek([Wakacje2020, Wakacje2019]), Tomek([Urodziny]), Romek([Dom, Praca])
 		Atomek([]), Anita([Anita's party, Art]), Halina([Halinas fotoski])
@@ -124,11 +124,11 @@ Likes:
 		Romek likes [], Atomek likes [Plaza2.jpg, Plaza1.jpg]
 		Anita likes [MyFace.png], Halina likes [Imprezka2.png]
 --------------------------------------
-[2022-02-22_23-59-31]: call: deletePhoto
+[2022-02-28_23-31-44]: call: deletePhoto
 	del: 'Imprezka2.png'  from album: Anita's party (Moje imprezowe)  user: Anita
 Transaction commited.
 --------------------------------------
-[2022-02-22_23-59-31]: call: previewDataBase
+[2022-02-28_23-31-44]: call: previewDataBase
 Users:	
 		Janek([Wakacje2020, Wakacje2019]), Tomek([Urodziny]), Romek([Dom, Praca])
 		Atomek([]), Anita([Anita's party, Art]), Halina([Halinas fotoski])
@@ -147,7 +147,7 @@ Likes:
 		Romek likes [], Atomek likes [Plaza2.jpg, Plaza1.jpg]
 		Anita likes [MyFace.png], Halina likes []
 --------------------------------------
-[2022-02-22_23-59-31]: call: previewDataBase
+[2022-02-28_23-31-44]: call: previewDataBase
 Users:	
 		Janek([Wakacje2020, Wakacje2019]), Tomek([Urodziny]), Romek([Dom, Praca])
 		Atomek([]), Anita([Anita's party, Art]), Halina([Halinas fotoski])
@@ -166,11 +166,11 @@ Likes:
 		Romek likes [], Atomek likes [Plaza2.jpg, Plaza1.jpg]
 		Anita likes [MyFace.png], Halina likes []
 --------------------------------------
-[2022-02-22_23-59-31]: call: deleteAlbum
+[2022-02-28_23-31-44]: call: deleteAlbum
 	del: 'Praca' from user: Romek
 Transaction commited.
 --------------------------------------
-[2022-02-22_23-59-31]: call: previewDataBase
+[2022-02-28_23-31-44]: call: previewDataBase
 Users:	
 		Janek([Wakacje2020, Wakacje2019]), Tomek([Urodziny]), Romek([Dom])
 		Atomek([]), Anita([Anita's party, Art]), Halina([Halinas fotoski])
@@ -189,7 +189,7 @@ Likes:
 		Romek likes [], Atomek likes [Plaza2.jpg, Plaza1.jpg]
 		Anita likes [MyFace.png], Halina likes []
 --------------------------------------
-[2022-02-22_23-59-31]: call: previewDataBase
+[2022-02-28_23-31-44]: call: previewDataBase
 Users:	
 		Janek([Wakacje2020, Wakacje2019]), Tomek([Urodziny]), Romek([Dom])
 		Atomek([]), Anita([Anita's party, Art]), Halina([Halinas fotoski])
@@ -208,11 +208,11 @@ Likes:
 		Romek likes [], Atomek likes [Plaza2.jpg, Plaza1.jpg]
 		Anita likes [MyFace.png], Halina likes []
 --------------------------------------
-[2022-02-22_23-59-31]: call: deleteUser
+[2022-02-28_23-31-44]: call: deleteUser
 	del: Janek -> albums: Wakacje2020, Wakacje2019 -> likes: Domowka2.jpg, Domowka1.jpg
 Transaction commited.
 --------------------------------------
-[2022-02-22_23-59-31]: call: previewDataBase
+[2022-02-28_23-31-44]: call: previewDataBase
 Users:	
 		Tomek([Urodziny]), Romek([Dom]), Atomek([])
 		Anita([Anita's party, Art]), Halina([Halinas fotoski])
