@@ -187,10 +187,16 @@ public class Main {
 
         albumBa.addPhotos(photoBa);
 
+        //TODO ends here. To do: should not be able to like photo for user not-friend.
+        // TODO: when user is deleted, he also shall be deleted from friend list.
         userA.addFriend(userB);
-        userA.addLikedPhoto(photoBa);
-        userB.addLikedPhoto(photoAa);
-        userB.addLikedPhoto(photoAb);
+        if (userA.isFriendOf(userB)) {
+            userA.addLikedPhoto(photoBa);
+        }
+        if (userB.isFriendOf(userA)) {
+            userB.addLikedPhoto(photoAa);
+            userB.addLikedPhoto(photoAb);
+        }
         userB.addAlbum(albumBa);
 
         Transaction transaction = session.beginTransaction();

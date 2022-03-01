@@ -110,6 +110,10 @@ public class User {
         return friends;
     }
 
+    public boolean isFriendOf(User user) {
+        return this.getFriends().contains(user);
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
