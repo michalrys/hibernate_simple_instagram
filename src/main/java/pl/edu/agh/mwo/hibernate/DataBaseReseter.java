@@ -20,11 +20,13 @@ public class DataBaseReseter {
         statement.addBatch("DROP TABLE photo;");
         statement.addBatch("DROP TABLE album;");
         statement.addBatch("DROP TABLE user;");
+        statement.addBatch("DROP TABLE user_friend_of_user;");
 
         statement.addBatch("CREATE TABLE user (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,name VARCHAR(100) NOT NULL DEFAULT \"Unknown name\",join_date DATETIME NOT NULL DEFAULT (datetime('now','localtime')));");
         statement.addBatch("CREATE TABLE album (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,user_id INTEGER REFERENCES user (id),name VARCHAR(100) NOT NULL DEFAULT \"My photos\",description VARCHAR(300) NOT NULL DEFAULT \"No description.\");");
         statement.addBatch("CREATE TABLE photo (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,album_id INTEGER REFERENCES album (id),name VARCHAR(100) NOT NULL DEFAULT \"My photos\",date DATETIME NOT NULL DEFAULT (datetime('now','localtime')));");
         statement.addBatch("CREATE TABLE user_photo_likes (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,user_id INTEGER REFERENCES user (id),photo_id INTEGER REFERENCES photo (id));");
+        statement.addBatch("CREATE TABLE user_friend_of_user(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,user_id INTEGER REFERENCES user(id),user_friend_id INTEGER REFERENCES user(id));");
 
         statement.addBatch("INSERT INTO user (name, join_date) VALUES ('Janek', '2001-02-14 12:04:50');");
         statement.addBatch("INSERT INTO user (name, join_date) VALUES ('Tomek', '2014-08-07 23:04:50');");
@@ -57,6 +59,13 @@ public class DataBaseReseter {
         statement.addBatch("INSERT INTO user_photo_likes (user_id, photo_id) VALUES (2, 2);");
         statement.addBatch("INSERT INTO user_photo_likes (user_id, photo_id) VALUES (4, 4);");
         statement.addBatch("INSERT INTO user_photo_likes (user_id, photo_id) VALUES (4, 5);");
+
+        statement.addBatch("INSERT INTO user_friend_of_user (user_id, user_friend_id) VALUES (1, 2);");
+        statement.addBatch("INSERT INTO user_friend_of_user (user_id, user_friend_id) VALUES (1, 3);");
+        statement.addBatch("INSERT INTO user_friend_of_user (user_id, user_friend_id) VALUES (1, 4);");
+        statement.addBatch("INSERT INTO user_friend_of_user (user_id, user_friend_id) VALUES (2, 1);");
+        statement.addBatch("INSERT INTO user_friend_of_user (user_id, user_friend_id) VALUES (3, 1);");
+        statement.addBatch("INSERT INTO user_friend_of_user (user_id, user_friend_id) VALUES (4, 1);");
 
         statement.executeBatch();
         statement.close();
