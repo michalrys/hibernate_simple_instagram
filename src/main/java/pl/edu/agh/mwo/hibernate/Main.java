@@ -76,7 +76,22 @@ public class Main {
             }
         }
         System.out.println();
-
+        System.out.println("\nUsers friends:");
+        logger.append("\nUsers -> friends:");
+        for (User user : users) {
+            Set<User> friends = user.getFriends();
+            System.out.printf("\n\t\t%s -> ", user.getName());
+            logger.append(String.format("\n\t\t%s -> ", user.getName()));
+            if (user.getFriends().size() != 0) {
+                for (User friend : friends) {
+                    System.out.printf(" %s |", friend.getName());
+                    logger.append(String.format(" %s |", friend.getName()));
+                }
+            } else {
+                System.out.print("no friends");
+                logger.append("no friends");
+            }
+        }
 //        System.out.println(photos);
         System.out.print("Photos:\t");
         logger.append("\nPhotos:\t");
@@ -172,9 +187,12 @@ public class Main {
 
         albumBa.addPhotos(photoBa);
 
-        userA.addLikedPhoto(photoBa);
-        userB.addLikedPhoto(photoAa);
-        userB.addLikedPhoto(photoAb);
+        userA.addFriend(userB);
+
+        userA.addLikedPhotoOfFriend(photoBa, userB);
+        userB.addLikedPhotoOfFriend(photoAa, userA);
+        userB.addLikedPhotoOfFriend(photoAb, userA);
+
         userB.addAlbum(albumBa);
 
         Transaction transaction = session.beginTransaction();
@@ -276,6 +294,8 @@ public class Main {
                     user.removeLikedPhoto(photo); // Photo usersWhoLikedPhoto has only Cascade.Persist, so I have to do it by hand here.
                 }
             }
+            Set<User> friendsOfUser = user.getFriends();
+            friendsOfUser.remove(userToDelete);
         }
 
         Transaction transaction = session.beginTransaction();

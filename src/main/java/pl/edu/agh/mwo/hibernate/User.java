@@ -18,7 +18,7 @@ public class User {
     @JoinColumn(name = "user_id")
     private Set<Album> albums = new HashSet<>();
 
-//    @ManyToMany(cascade = {CascadeType.ALL})
+    //    @ManyToMany(cascade = {CascadeType.ALL})
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "user_photo_likes",
@@ -26,6 +26,14 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "photo_id")
     )
     private Set<Photo> likedPhotos = new HashSet<>();
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "user_friend_of_user",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_friend_id")
+    )
+    private Set<User> friends = new HashSet<>();
 
     @Column(name = "name")
     private String name;
@@ -82,13 +90,53 @@ public class User {
         return likedPhotos;
     }
 
+    public void addFriend(User user) {
+        friends.add(user);
+        Set<User> friendsOfUser = user.getFriends();
+        if (!friendsOfUser.contains(this)) {
+            user.addFriend(this);
+        }
+    }
+
+    public void removeFriend(User user) {
+        friends.remove(user);
+        Set<User> friendsOfUser = user.getFriends();
+        if (!friendsOfUser.contains(this)) {
+            user.removeFriend(this);
+        }
+    }
+
+    public Set<User> getFriends() {
+        return friends;
+    }
+
+    public boolean isFriendOf(User user) {
+        return this.getFriends().contains(user);
+    }
+
+    public void addLikedPhotoOfFriend(Photo photo, User user) {
+        if (isFriendOf(user)) {
+            addLikedPhoto(photo);
+        }
+    }
+
     @Override
     public String toString() {
-        return "User{" +
+        StringBuilder result = new StringBuilder();
+        result.append("User{" +
                 "id=" + id +
                 ", albums=" + albums +
                 ", name='" + name + '\'' +
-                ", joinDate=" + joinDate +
-                '}';
+                ", joinDate=" + joinDate);
+        if (friends.size() != 0) {
+            result.append(", friends:");
+            for (User user : friends) {
+                result.append(user.getName());
+                result.append(",");
+            }
+            result.replace(result.length() - 1, result.length(), "");
+        }
+        result.append("}");
+        return result.toString();
     }
 }
