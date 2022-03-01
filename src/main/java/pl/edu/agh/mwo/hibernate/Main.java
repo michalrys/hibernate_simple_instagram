@@ -187,8 +187,6 @@ public class Main {
 
         albumBa.addPhotos(photoBa);
 
-        //TODO ends here. To do: should not be able to like photo for user not-friend.
-        // TODO: when user is deleted, he also shall be deleted from friend list.
         userA.addFriend(userB);
 
         userA.addLikedPhotoOfFriend(photoBa, userB);
@@ -296,6 +294,8 @@ public class Main {
                     user.removeLikedPhoto(photo); // Photo usersWhoLikedPhoto has only Cascade.Persist, so I have to do it by hand here.
                 }
             }
+            Set<User> friendsOfUser = user.getFriends();
+            friendsOfUser.remove(userToDelete);
         }
 
         Transaction transaction = session.beginTransaction();
