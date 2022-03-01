@@ -114,6 +114,12 @@ public class User {
         return this.getFriends().contains(user);
     }
 
+    public void addLikedPhotoOfFriend(Photo photo, User user) {
+        if (isFriendOf(user)) {
+            addLikedPhoto(photo);
+        }
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
